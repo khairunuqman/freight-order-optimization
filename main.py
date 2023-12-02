@@ -8,4 +8,5 @@ data_model = DataModel(data=pre_processor)
 model = cp_model.CpModel()
 math_model = MathModel(data_model=data_model, model=model)
 math_model.create_variable_instances()
+math_model.create_constraints()
 pass

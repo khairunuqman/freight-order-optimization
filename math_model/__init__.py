@@ -10,10 +10,15 @@ class MathModel:
                  model:cp_model) -> None:
         self.model:cp_model = model
         self.variable = VariableBuilder(data_model,self.model)
-        # self.constraint = ConstraintBuilder(data_model)
+        self.constraint = ConstraintBuilder(data_model,self.model,self.variable)
         # self.objective = ObjectiveBuilder(data_model)
 
     def create_variable_instances(self) -> None:
         start_time = time.time()
         self.variable.add_freight_order_association()
         print(f"Variable Creation Time: {time.time()-start_time} seconds")
+
+    def create_constraints(self) -> None:
+        start_time = time.time()
+        self.constraint.one_order_max_one_frieght()
+        print(f"Constraint Creation Time: {time.time()-start_time} seconds")
