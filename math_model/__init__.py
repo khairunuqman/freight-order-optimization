@@ -22,3 +22,7 @@ class MathModel:
         start_time = time.time()
         self.constraint.one_order_max_one_frieght()
         print(f"Constraint Creation Time: {time.time()-start_time} seconds")
+    
+    def display_num_var_ctr(self):
+        print(f"Variables Created: {self.variable.get_number_of_variable()}")
+        print(f"Constraints Created: {self.constraint.get_number_of_constraint()}")

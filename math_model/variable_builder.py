@@ -16,3 +16,7 @@ class VariableBuilder:
             if freight.origin_port.get_id() == order.origin_port.get_id()
             and freight.destination_port.get_id() == order.destination_port.get_id()
         })
+    
+    def get_number_of_variable(self):
+        return len(self.freight_order_association)
+
