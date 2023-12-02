@@ -3,6 +3,7 @@ from .plant_port import PlantPort
 from .order import Order
 from .product import Product
 from .freight import Freight
+import time
 class DataModel:
     def __init__(self,data: PreProcessor) -> None:
         self.data:PreProcessor = data
@@ -13,10 +14,14 @@ class DataModel:
         self.initialize_data_model()
 
     def initialize_data_model(self) -> None:
+        start_time = time.time()
         self.fill_warehouse_port()
         self.fill_product_per_plant()
         self.fill_order()
         self.fill_freight()
+        print(f"Data Model Creation Time: {time.time()-start_time} seconds")
+        print(f"Freight: {len(self.freight)}")
+        print(f"Order: {len(self.order)}")
 
     def fill_warehouse_port(self):
         for _, row in self.data.df_port_info.iterrows():
