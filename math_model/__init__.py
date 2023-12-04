@@ -21,8 +21,8 @@ class MathModel:
     def create_constraints(self) -> None:
         start_time = time.time()
         self.constraint.one_order_max_one_freight()
-        self.constraint.maximize_orders_per_freight()
-        # self.constraint.max_weight_constraint()
+        self.constraint.ub_orders_per_freight()
+        self.constraint.maximize_freight_assignment_of_order()
         print(f"Constraint Creation Time: {time.time()-start_time} seconds")
     
     def display_num_var_ctr(self):
