@@ -48,8 +48,8 @@ class SolutionPrinter(cp_model.CpSolverSolutionCallback):
                                   'max_weight'
                         ])
         for _,row in self.solutions_dict.items():
-            df_solution = df_solution.append(self.add_row(row['freight'],row['order']),ignore_index=True)
-
+            new_row = pd.DataFrame(self.add_row(row['freight'], row['order']))
+            df_solution = pd.concat([df_solution, new_row], ignore_index=True)
         df_solution.to_csv('Solution.csv', index=False)
 
     def add_row(self,freight,order):

@@ -1,0 +1,28 @@
+-------------------------------------------------------------
+Freight
+-------------------------------------------------------------
+ - has origin and destination
+ - has maximum weight capacity
+
+-------------------------------------------------------------
+Order
+-------------------------------------------------------------
+ - has origin and destination
+ - has weight
+ - has number of items
+
+ 
+-------------------------------------------------------------
+Business Rules
+-------------------------------------------------------------
+ - one order can be assigned to one freight
+ - one frieght can have many order
+ - one frieght may not have any order
+ - one order may not be assignable to a freight
+
+
+-------------------------------------------------------------
+Objective Function
+-------------------------------------------------------------
+ - Maximize number of orders associated to freights
+    Σ freight * order coverage

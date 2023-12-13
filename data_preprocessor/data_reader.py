@@ -5,7 +5,7 @@ class DataReader:
         self.df_freight_rates =\
             pd.read_csv(f"{RELATIVE_PATH}FreightRates.csv").head(300)
         self.df_order_list =\
-            pd.read_csv(f"{RELATIVE_PATH}OrderList.csv").head(400)
+            pd.read_csv(f"{RELATIVE_PATH}OrderList.csv").head(2000)
         self.df_plant_ports =\
             pd.read_csv(f"{RELATIVE_PATH}PlantPorts.csv")
         self.df_products_per_plant =\
