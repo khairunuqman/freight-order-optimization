@@ -13,6 +13,7 @@ model = cp_model.CpModel()
 math_model = MathModel(data_model=data_model, model=model)
 math_model.create_variable_instances()
 math_model.create_constraints()
+math_model.create_objective_coefficient()
 math_model.display_num_var_ctr()
 
 # Solving

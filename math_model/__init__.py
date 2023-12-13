@@ -11,7 +11,7 @@ class MathModel:
         self.model:cp_model = model
         self.variable = VariableBuilder(data_model,self.model)
         self.constraint = ConstraintBuilder(data_model,self.model,self.variable)
-        # self.objective = ObjectiveBuilder(data_model)
+        self.objective = ObjectiveBuilder(data_model,self.model,self.variable)
 
     def create_variable_instances(self) -> None:
         start_time = time.time()
@@ -23,8 +23,15 @@ class MathModel:
         self.constraint.one_order_is_assigned_to_one_frieght()
         self.constraint.one_frieght_is_can_have_many_orders()
         self.constraint.order_may_not_be_assignable_to_freight()
+        self.constraint.limit_n_orders_per_freight()
         print(f"Constraint Creation Time: {time.time()-start_time} seconds")
     
+    def create_objective_coefficient(self) -> None:
+        start_time = time.time()
+        self.objective.penalty_unassigned_freight()
+        self.objective.penalty_uncovered_order()
+        print(f"Objective Coefficient Creation Time: {time.time()-start_time} seconds")
+    
     def display_num_var_ctr(self):
-        print(f"Variables Created: {self.variable.get_number_of_variable()}")
-        print(f"Constraints Created: {self.constraint.get_number_of_constraint()}")
+        print(f"Number of Variables: {self.variable.get_number_of_variable()}")
+        print(f"Number of Constraints: {self.constraint.get_number_of_constraint()}")

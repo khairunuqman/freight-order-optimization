@@ -12,6 +12,8 @@ class DataModel:
         self.order:dict = {}
         self.freight:dict = {}
         self.initialize_data_model()
+        self.UNUSED_FREIGHT_PENALTY = 100_000
+        self.UNCOVERED_ORDER = 2_000
 
     def initialize_data_model(self) -> None:
         start_time = time.time()
