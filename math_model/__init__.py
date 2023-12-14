@@ -21,9 +21,9 @@ class MathModel:
     def create_constraints(self) -> None:
         start_time = time.time()
         self.constraint.one_order_is_assigned_to_one_frieght()
-        self.constraint.one_frieght_is_can_have_many_orders()
         self.constraint.order_may_not_be_assignable_to_freight()
-        self.constraint.limit_n_orders_per_freight()
+        # self.constraint.limit_n_orders_per_freight()
+        self.constraint.freight_max_weight()
         print(f"Constraint Creation Time: {time.time()-start_time} seconds")
     
     def create_objective_coefficient(self) -> None:

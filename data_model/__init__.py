@@ -4,6 +4,7 @@ from .order import Order
 from .product import Product
 from .freight import Freight
 import time
+import math
 class DataModel:
     def __init__(self,data: PreProcessor) -> None:
         self.data:PreProcessor = data
@@ -12,8 +13,8 @@ class DataModel:
         self.order:dict = {}
         self.freight:dict = {}
         self.initialize_data_model()
-        self.UNUSED_FREIGHT_PENALTY = 100_000
-        self.UNCOVERED_ORDER = 2_000
+        self.UNUSED_FREIGHT_PENALTY = 100_00
+        self.UNCOVERED_ORDER = 2
 
     def initialize_data_model(self) -> None:
         start_time = time.time()
@@ -54,7 +55,7 @@ class DataModel:
                 plant_code=row.plant_code,
                 destination_port=self.port[row.destination_port],
                 unit_quantity=row.unit_quantity,
-                weight=row.weight
+                weight=math.ceil(row.weight)
             )
             self.order[row.order_id] = order
 
@@ -67,7 +68,7 @@ class DataModel:
                 orig_port_cd=self.port[row.orig_port_cd],
                 dest_port_cd=self.port[row.dest_port_cd],
                 minm_wgh_qty=row.minm_wgh_qty,
-                max_wgh_qty=row.max_wgh_qty,
+                max_wgh_qty=math.ceil(row.max_wgh_qty),
                 minimum_cost=row.minimum_cost
             )
             self.freight[freight_id] = freight

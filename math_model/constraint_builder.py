@@ -23,16 +23,6 @@ class ConstraintBuilder:
             self.model.Add(sum(order_assignment_vars) == 1)
             self.nb_constraint += 1
 
-    def one_frieght_is_can_have_many_orders(self) -> None:
-        for freight_id in self.data_model.freight:
-            freight_assignment_vars =\
-                [var for var in 
-                    [self.variable.freight_order_association.get((freight_id, order_id), None)
-                     for order_id in self.data_model.order]
-                 if var is not None]
-            self.model.Add(sum(freight_assignment_vars) >= 0)  # Freight can have 0 or more orders
-            self.nb_constraint += 1
-
     def order_may_not_be_assignable_to_freight(self) -> None:
         for order_id in self.data_model.order:
             order_assignment_vars =\
@@ -49,7 +39,26 @@ class ConstraintBuilder:
             freight_assignment_vars = [var for var in freight_assignment_vars if var is not None]
             self.model.Add(sum(freight_assignment_vars) <= 30)
             self.nb_constraint += 1
+    
+    def freight_max_weight(self) -> None:
+        for freight_id in self.data_model.freight:
+            freight_assignment_vars = [self.variable.freight_order_association.get((freight_id, order_id), None)
+                                    for order_id in self.data_model.order]
+            freight_assignment_vars = [
+                var for var in freight_assignment_vars
+                if var is not None
+            ]
+            weights = [
+                order.weight
+                for order_id, order in self.data_model.order.items()
+                if (freight_id, order_id) in self.variable.freight_order_association
+            ]
 
+            self.model.Add(
+                sum(
+                    freight_assignment_vars[i] * weights[i]
+                    for i in range(len(weights)))<= self.data_model.freight[freight_id].max_wgh_qty
+            )
     def remove_none_instances(self, item:list) -> list:
         return [
                 var for var in item
