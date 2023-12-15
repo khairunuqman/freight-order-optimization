@@ -14,51 +14,44 @@ class ConstraintBuilder:
         self.order_weights = []
         self.nb_constraint = 0
 
-    def one_order_is_assigned_to_one_frieght(self) -> None:
+    def order_at_most_one_freight(self) -> None:
         for order_id in self.data_model.order:
             order_assignment_vars =\
                 [self.variable.freight_order_association.get((freight_id, order_id), None)
                  for freight_id, _ in self.data_model.freight.items()
                  if self.variable.freight_order_association.get((freight_id, order_id), None) is not None]
-            self.model.Add(sum(order_assignment_vars) == 1)
-            self.nb_constraint += 1
-
-    def order_may_not_be_assignable_to_freight(self) -> None:
-        for order_id in self.data_model.order:
-            order_assignment_vars =\
-                [self.variable.freight_order_association.get((freight_id, order_id), None)
-                 for freight_id, _ in self.data_model.freight.items()
-                 if self.variable.freight_order_association.get((freight_id, order_id), None) is not None]
-            self.model.Add(sum(order_assignment_vars) <= 1)  # Order can be assigned to at most 1 freight
-            self.nb_constraint += 1
-
-    def limit_n_orders_per_freight(self) -> None:
-        for freight_id in self.data_model.freight:
-            freight_assignment_vars = [self.variable.freight_order_association.get((freight_id, order_id), None)
-                                       for order_id in self.data_model.order]
-            freight_assignment_vars = [var for var in freight_assignment_vars if var is not None]
-            self.model.Add(sum(freight_assignment_vars) <= 30)
-            self.nb_constraint += 1
+            if order_assignment_vars:
+                self.model.Add(sum(order_assignment_vars) <= 1)  # Order can be assigned to at most 1 freight
+                self.nb_constraint += 1
     
     def freight_max_weight(self) -> None:
         for freight_id in self.data_model.freight:
-            freight_assignment_vars = [self.variable.freight_order_association.get((freight_id, order_id), None)
-                                    for order_id in self.data_model.order]
-            freight_assignment_vars = [
-                var for var in freight_assignment_vars
-                if var is not None
-            ]
-            weights = [
-                order.weight
-                for order_id, order in self.data_model.order.items()
-                if (freight_id, order_id) in self.variable.freight_order_association
-            ]
+            freight_assignment_vars =\
+                [self.variable.freight_order_association.get((freight_id, order_id), None)
+                 for order_id in self.data_model.order
+                 if self.variable.freight_order_association.get((freight_id, order_id), None) is not None]
+            weights =\
+                [order.weight
+                 for order_id, order in self.data_model.order.items()
+                 if (freight_id, order_id) in self.variable.freight_order_association]
+            if freight_assignment_vars:
+                self.model.Add(
+                    sum(freight_assignment_vars[i] * weights[i]
+                        for i in range(len(weights)))<= self.data_model.freight[freight_id].max_wgh_qty)
+                self.nb_constraint += 1
 
-            self.model.Add(
-                sum(
-                    freight_assignment_vars[i] * weights[i]
-                    for i in range(len(weights)))<= self.data_model.freight[freight_id].max_wgh_qty
-            )
+    def warehouse_max_capacity(self) -> None:
+        for port_id in self.data_model.port:
+            order_assignment_vars =\
+                [self.variable.freight_order_association.get((freight_id, order_id), None)
+                 for freight_id, _ in self.data_model.freight.items()
+                 for order_id in self.data_model.order
+                 if self.data_model.freight[freight_id].destination_port.id == port_id
+                 if self.variable.freight_order_association.get((freight_id, order_id), None) is not None]
+            if order_assignment_vars:
+                self.model.Add(sum(order_assignment_vars) <= self.data_model.port[port_id].daily_capacity)
+                self.nb_constraint += 1
+
     def remove_none_instances(self, item:list) -> list:
         return [
                 var for var in item

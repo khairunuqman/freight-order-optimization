@@ -19,15 +19,14 @@ class ObjectiveBuilder:
         for freight_id in self.data_model.freight:
             freight_assignment_vars =\
                 [self.variable.freight_order_association.get((freight_id, order_id), None)
-                 for order_id in self.data_model.order]
-            freight_assignment_vars = [var for var in freight_assignment_vars if var is not None]
+                 for order_id in self.data_model.order
+                 if self.variable.freight_order_association.get((freight_id, order_id), None) is not None]
             self.value_coefficient += self.data_model.UNUSED_FREIGHT_PENALTY * (1 - sum(freight_assignment_vars))
 
     def penalty_uncovered_order(self) -> None:
         for order_id in self.data_model.order:
             order_assignment_vars =\
                 [self.variable.freight_order_association.get((freight_id, order_id), None)
-                 for freight_id, _ in self.data_model.freight.items()]
-            order_assignment_vars = [var for var in order_assignment_vars if var is not None]
+                 for freight_id, _ in self.data_model.freight.items()
+                 if self.variable.freight_order_association.get((freight_id, order_id), None) is not None]
             self.value_coefficient += self.data_model.UNCOVERED_ORDER * (1 - sum(order_assignment_vars))
-        

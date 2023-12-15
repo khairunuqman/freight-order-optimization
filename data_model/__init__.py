@@ -61,6 +61,8 @@ class DataModel:
 
     def fill_freight(self):
         for idx, row in self.data.df_freight_rates.iterrows():
+            if row.max_wgh_qty > 2000:
+                continue
             freight_id = f"{idx}_{row.carrier}_{row.orig_port_cd}_{row.dest_port_cd}"
             freight = Freight(
                 freight_id=freight_id,
