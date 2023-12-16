@@ -29,6 +29,7 @@ class MathModel:
         start_time = time.time()
         self.objective.penalty_unassigned_freight()
         self.objective.penalty_uncovered_order()
+        self.objective.penalty_cost_order()
         print(f"Objective Coefficient Creation Time: {time.time()-start_time} seconds")
     
     def display_num_var_ctr(self):
