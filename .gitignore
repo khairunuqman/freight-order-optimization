@@ -2,3 +2,5 @@ data_model/__pycache__
 data_preprocessor/__pycache__
 math_model/__pycache__
 optimizer/__pycache__
+venv
+Solution.csv

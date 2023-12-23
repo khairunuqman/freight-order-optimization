@@ -1,7 +1,7 @@
 import pandas as pd
 class DataReader:
     def __init__(self) -> None:
-        RELATIVE_PATH = "..\\data\\supply_chain\\"
+        RELATIVE_PATH = "..\\data\\freight-order-optimization\\"
         self.df_freight_rates =\
             pd.read_csv(f"{RELATIVE_PATH}FreightRates.csv").head(200)
         self.df_order_list =\
